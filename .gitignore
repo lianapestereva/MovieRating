@@ -4,3 +4,5 @@
 *.json
 film.db
 webscraping_tut.md
+__pycache__
+.env
