@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Опросник</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Выберите ваши предпочтения</h1>
+        
+        <form id="questionnaire-form">
+            <div class="form-section">
+                <h2>Критерии оценки</h2>
+                
+                <div class="criteria-item">
+                    <label>Юмор:</label>
+                    <select name="rating">
+                        <option value="0">Не важно</option>
+                        <option value="1">1 (Минимально важно)</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5 (Очень важно)</option>
+                    </select>
+                </div>
+                
+                <div class="criteria-item">
+                    <label>Сюжет:</label>
+                    <select name="plot">
+                        <option value="0">Не важно</option>
+                        <option value="1">1 (Минимально важно)</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5 (Очень важно)</option>
+                    </select>
+                </div>
+                <div class="criteria-item">
+                    <label>Картинка:</label>
+                    <select name="visuals">
+                        <option value="0">Не важно</option>
+                        <option value="1">1 (Минимально важно)</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5 (Очень важно)</option>
+                    </select>
+                </div>
+                <div class="criteria-item">
+                    <label>Актерская игра:</label>
+                    <select name="acting">
+                        <option value="0">Не важно</option>
+                        <option value="1">1 (Минимально важно)</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5 (Очень важно)</option>
+                    </select>
+                </div>
+                <div class="criteria-item">
+                    <label>Звуковой дизайн:</label>
+                    <select name="sound">
+                        <option value="0">Не важно</option>
+                        <option value="1">1 (Минимально важно)</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5 (Очень важно)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Фильтры</h2>
+                
+                <div class="filter-item">
+                    <label>Возрастное ограничение:</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="age" value="0+"> 0+</label>
+                        <label><input type="checkbox" name="age" value="6+"> 6+</label>
+                        <label><input type="checkbox" name="age" value="12+"> 12+</label>
+                        <label><input type="checkbox" name="age" value="16+"> 16+</label>
+                        <label><input type="checkbox" name="age" value="18+"> 18+</label>
+                    </div>
+                </div>
+                
+                <div class="filter-item">
+                    <label>Тип:</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="type" value="фильм"> Фильм</label>
+                        <label><input type="checkbox" name="type" value="сериал"> Сериал</label>
+                    </div>
+                </div>
+                
+                <div class="filter-item">
+                    <label>Жанры:</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="genres" value="комедия"> Комедия</label>
+                        <label><input type="checkbox" name="genres" value="драма"> Драма</label>
+                        <label><input type="checkbox" name="genres" value="боевик"> Боевик</label>
+                        <label><input type="checkbox" name="genres" value="фантастика"> Фантастика</label>
+                        <label><input type="checkbox" name="genres" value="триллер"> Триллер</label>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn">Получить рекомендации</button>
+        </form>
+    </div>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
