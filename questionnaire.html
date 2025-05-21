@@ -14,61 +14,59 @@
             <div class="form-section">
                 <h2>Критерии оценки</h2>
                 
-                <div class="criteria-item">
+                <div class="rating-item">
                     <label>Юмор:</label>
-                    <select name="rating">
-                        <option value="0">Не важно</option>
-                        <option value="1">1 (Минимально важно)</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5 (Очень важно)</option>
-                    </select>
+                    <div class="star-rating">
+                        <input type="radio" id="humor1" name="humor" value="5"><label for="humor1">★</label>
+                        <input type="radio" id="humor2" name="humor" value="4"><label for="humor2">★</label>
+                        <input type="radio" id="humor3" name="humor" value="3"><label for="humor3">★</label>
+                        <input type="radio" id="humor4" name="humor" value="2"><label for="humor4">★</label>
+                        <input type="radio" id="humor5" name="humor" value="1"><label for="humor5">★</label>
+                    </div>
                 </div>
                 
-                <div class="criteria-item">
+                <div class="rating-item">
                     <label>Сюжет:</label>
-                    <select name="plot">
-                        <option value="0">Не важно</option>
-                        <option value="1">1 (Минимально важно)</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5 (Очень важно)</option>
-                    </select>
+                    <div class="star-rating">
+                        <input type="radio" id="plot1" name="plot" value="5"><label for="plot1">★</label>
+                        <input type="radio" id="plot2" name="plot" value="4"><label for="plot2">★</label>
+                        <input type="radio" id="plot3" name="plot" value="3"><label for="plot3">★</label>
+                        <input type="radio" id="plot4" name="plot" value="2"><label for="plot4">★</label>
+                        <input type="radio" id="plot5" name="plot" value="1"><label for="plot5">★</label>
+                    </div>
                 </div>
-                <div class="criteria-item">
-                    <label>Картинка:</label>
-                    <select name="visuals">
-                        <option value="0">Не важно</option>
-                        <option value="1">1 (Минимально важно)</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5 (Очень важно)</option>
-                    </select>
+                
+                <div class="rating-item">
+                    <label>Кинематографичность:</label>
+                    <div class="star-rating">
+                        <input type="radio" id="visuals1" name="visuals" value="5"><label for="visuals1">★</label>
+                        <input type="radio" id="visuals2" name="visuals" value="4"><label for="visuals2">★</label>
+                        <input type="radio" id="visuals3" name="visuals" value="3"><label for="visuals3">★</label>
+                        <input type="radio" id="visuals4" name="visuals" value="2"><label for="visuals4">★</label>
+                        <input type="radio" id="visuals5" name="visuals" value="1"><label for="visuals5">★</label>
+                    </div>
                 </div>
-                <div class="criteria-item">
+                
+                <div class="rating-item">
                     <label>Актерская игра:</label>
-                    <select name="acting">
-                        <option value="0">Не важно</option>
-                        <option value="1">1 (Минимально важно)</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5 (Очень важно)</option>
-                    </select>
+                    <div class="star-rating">
+                        <input type="radio" id="acting1" name="acting" value="5"><label for="acting1">★</label>
+                        <input type="radio" id="acting2" name="acting" value="4"><label for="acting2">★</label>
+                        <input type="radio" id="acting3" name="acting" value="3"><label for="acting3">★</label>
+                        <input type="radio" id="acting4" name="acting" value="2"><label for="acting4">★</label>
+                        <input type="radio" id="acting5" name="acting" value="1"><label for="acting5">★</label>
+                    </div>
                 </div>
-                <div class="criteria-item">
+                
+                <div class="rating-item">
                     <label>Звуковой дизайн:</label>
-                    <select name="sound">
-                        <option value="0">Не важно</option>
-                        <option value="1">1 (Минимально важно)</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5 (Очень важно)</option>
-                    </select>
+                    <div class="star-rating">
+                        <input type="radio" id="sound1" name="sound" value="5"><label for="sound1">★</label>
+                        <input type="radio" id="sound2" name="sound" value="4"><label for="sound2">★</label>
+                        <input type="radio" id="sound3" name="sound" value="3"><label for="sound3">★</label>
+                        <input type="radio" id="sound4" name="sound" value="2"><label for="sound4">★</label>
+                        <input type="radio" id="sound5" name="sound" value="1"><label for="sound5">★</label>
+                    </div>
                 </div>
             </div>
             
@@ -89,19 +87,20 @@
                 <div class="filter-item">
                     <label>Тип:</label>
                     <div class="checkbox-group">
-                        <label><input type="checkbox" name="type" value="фильм"> Фильм</label>
-                        <label><input type="checkbox" name="type" value="сериал"> Сериал</label>
+                        <label><input type="checkbox" name="type" value="film"> Фильм</label>
+                        <label><input type="checkbox" name="type" value="series"> Сериал</label>
+                        <label><input type="checkbox" name="type" value="cartoon"> Мультфильм</label>
                     </div>
                 </div>
                 
                 <div class="filter-item">
                     <label>Жанры:</label>
                     <div class="checkbox-group">
-                        <label><input type="checkbox" name="genres" value="комедия"> Комедия</label>
-                        <label><input type="checkbox" name="genres" value="драма"> Драма</label>
-                        <label><input type="checkbox" name="genres" value="боевик"> Боевик</label>
-                        <label><input type="checkbox" name="genres" value="фантастика"> Фантастика</label>
-                        <label><input type="checkbox" name="genres" value="триллер"> Триллер</label>
+                        <label><input type="checkbox" name="genres" value="comedy"> Комедия</label>
+                        <label><input type="checkbox" name="genres" value="drama"> Драма</label>
+                        <label><input type="checkbox" name="genres" value="action"> Боевик</label>
+                        <label><input type="checkbox" name="genres" value="sci-fi"> Фантастика</label>
+                        <label><input type="checkbox" name="genres" value="thriller"> Триллер</label>
                     </div>
                 </div>
             </div>
