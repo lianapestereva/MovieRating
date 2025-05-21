@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Кнопка "Выбрать фильм" на главной странице
+    //Кнопка "Выбрать фильм"
     const startBtn = document.getElementById('start-btn');
     if (startBtn) {
         startBtn.addEventListener('click', function() {
@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Обработка формы опросника
+    //Опросника
     const form = document.getElementById('questionnaire-form');
     if (form) {
         form.addEventListener('submit', function(e) {
@@ -15,30 +15,34 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const formData = new FormData(form);
             const data = {
-                humor: formData.get('humor'),
-                plot: formData.get('plot'),
-                visuals: formData.get('visuals'),
-                acting: formData.get('acting'),
-                sound: formData.get('sound'),
-                age: [],
-                type: [],
-                genres: []
+                criteria: {
+                    humor: formData.get('humor') || "0",
+                    plot: formData.get('plot') || "0",
+                    visuals: formData.get('visuals') || "0",
+                    acting: formData.get('acting') || "0",
+                    sound: formData.get('sound') || "0"
+                },
+                filters: {
+                    age: [],
+                    type: [],
+                    genres: []
+                }
             };
 
-            // Собираем выбранные checkbox значения
+            //Сбор значений фильтров
             document.querySelectorAll('input[name="age"]:checked').forEach(el => {
-                data.age.push(el.value);
+                data.filters.age.push(el.value);
             });
             
             document.querySelectorAll('input[name="type"]:checked').forEach(el => {
-                data.type.push(el.value);
+                data.filters.type.push(el.value);
             });
             
             document.querySelectorAll('input[name="genres"]:checked').forEach(el => {
-                data.genres.push(el.value);
+                data.filters.genres.push(el.value);
             });
 
-            // Отправка данных на сервер
+            //Отправка данных на сервер
             fetch('/process_answers', {
                 method: 'POST',
                 headers: {
@@ -57,4 +61,15 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    //Звездного рейтинга
+    const starRatings = document.querySelectorAll('.star-rating');
+    starRatings.forEach(rating => {
+        const stars = rating.querySelectorAll('input[type="radio"]');
+        stars.forEach(star => {
+            star.addEventListener('change', function() {
+                console.log(`Selected value: ${this.value}`);
+            });
+        });
+    });
 });
