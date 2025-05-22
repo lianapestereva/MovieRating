@@ -1,3 +1,6 @@
+import sqlite3
+from src.absa import analyze_film
+
 def process_movie_reviews_advanced(input_db: str, output_db: str):
     """Обрабатывает все отзывы для каждого фильма и сохраняет усредненные результаты"""
     input_conn = sqlite3.connect(input_db)
@@ -18,7 +21,7 @@ def process_movie_reviews_advanced(input_db: str, output_db: str):
         reviews = [row[0] for row in input_cur.fetchall()]
         
         # Анализируем каждый отзыв и усредняем результаты
-        all_analyses = [analyse(review) for review in reviews]
+        all_analyses = [analyze_film(review) for review in reviews]
         avg_analysis = [sum(x)/len(x) for x in zip(*all_analyses)] if all_analyses else []
         
         # Сохраняем результат
