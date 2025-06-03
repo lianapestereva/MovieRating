@@ -128,5 +128,5 @@ def detect_implicit_aspect(sentence, aspect_embedding, threshold=0.65):
 
 
 if __name__ == "__main__":
-    review = "Сюжет был интересным. А вот актеры плохо сыграли. Было смешно."
+    review = "Сюжет был интересным. А вот актеры плохо сыграли. Было смешно. "
     print(analyze_review(review))
