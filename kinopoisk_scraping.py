@@ -3,13 +3,10 @@ import requests
 import json
 import sqlite3
 import os
-import dotenv
 from dotenv import load_dotenv
 
 
-
 load_dotenv()
-
 
 TOKEN = os.getenv("TOKEN")
 
@@ -19,6 +16,10 @@ headers = {
     "X-API-KEY": f"{TOKEN}",
     "accept": "application/json"
 }
+
+connection = sqlite3.connect("film.db")
+cursor = connection.cursor()
+print('db init...')
 
 
 def save_json(name, data) :
@@ -77,37 +78,34 @@ def get_movie_info(movie: json):
         duration
     ))
 
+
 def get_json_movie_list_through_api(url):
     response = requests.get(url, headers=headers)
     return response.json()
 
 
-def go_through_movie_list(file_name):
-    with open(file_name, "r", encoding='utf-8') as file:
-        movie_list = json.load(file)
+def go_through_movie_list(movie_data: dict, length=50):
+    if not movie_data:
+        print("Invalid movie data format")
+        return
 
-    for i in range(0, 100):
-        get_movie_info(movie_list['docs'][i])
+    for i in range(0, length):
+        get_movie_info(movie_data['docs'][i])
 
 
 def save_movies_to_db(url: str):
     try:
-        connection = sqlite3.connect("film.db")
-        cursor = connection.cursor()
-
-        print('db init...')
-
         connection.execute('''
             CREATE TABLE IF NOT EXISTS films
             (ID INTEGER PRIMARY KEY,
             NAME TEXT,
+            YEAR INTEGER,
             RATING REAL,
             IS_SERIES INTEGER,
             GENRES TEXT,
             REVIEWS TEXT,
             AGE_RATING INTEGER,
-            DURATION INTEGER,
-            YEAR INTEGER
+            DURATION INTEGER
             );
         ''')
 
@@ -127,17 +125,13 @@ def save_movies_to_db(url: str):
 
 
 if __name__=="__main__":
-    print("""Choose your action:
-    1. Add list of movies via url
-    2. Save reviews from json file
-    
-    """)
+    print("Using this file, you can add a list of movies via url to the pre-existing database film.db")
 
-    action = int(input())
+    print("To start press enter: ")
+    url = "https://api.kinopoisk.dev/v1.4/movie?page=1&limit=50&selectFields=id&selectFields=name&selectFields=year&selectFields=rating&selectFields=movieLength&selectFields=totalSeriesLength&selectFields=seriesLength&selectFields=ageRating&selectFields=genres&selectFields=isSeries&lists=top500"
 
-    if action == 1:
-        url = input("input the kinopoisk url: ")
-        save_movies_to_db("https://api.kinopoisk.dev/v1.4/movie?page=1&limit=250&selectFields=id&selectFields=name&selectFields=year&selectFields=rating&selectFields=movieLength&selectFields=totalSeriesLength&selectFields=seriesLength&selectFields=ageRating&selectFields=genres&selectFields=isSeries&lists=top250")
+    save_movies_to_db(url)
 
+    print("all done!")
 
 
