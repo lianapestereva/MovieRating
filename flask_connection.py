@@ -3,11 +3,11 @@ import sqlite3
 import json
 import os
 import numpy as np
-from src.absa import analyze_film  # Импорт функции анализа отзывов
+from absa import analyze_film  # Импорт функции анализа отзывов
 
 app = Flask(__name__)
 
-# Конфигурация БД
+
 DATABASE = 'films.db'
 ANALYSIS_DB = 'film_analysis.db'
 
@@ -17,9 +17,9 @@ def get_db_connection(db_file=DATABASE):
     conn.row_factory = sqlite3.Row
     return conn
 
-
+#Анализирует все фильмы и сохраняет результаты в отдельную дб
 def analyze_movies():
-    """Анализирует все фильмы и сохраняет результаты в отдельную БД"""
+
     input_conn = get_db_connection(DATABASE)
     output_conn = get_db_connection(ANALYSIS_DB)
 
@@ -27,7 +27,6 @@ def analyze_movies():
         input_cur = input_conn.cursor()
         output_cur = output_conn.cursor()
 
-        # Создаем таблицу для анализа, если ее нет
         output_cur.execute('''CREATE TABLE IF NOT EXISTS film_analysis
                               (
                                   id
@@ -48,7 +47,6 @@ def analyze_movies():
                                   INTEGER
                               )''')
 
-        # Получаем все фильмы с отзывами
         input_cur.execute('''SELECT f.id,
                                     f.name,
                                     f.rating,
@@ -64,7 +62,6 @@ def analyze_movies():
         for film in input_cur.fetchall():
             reviews = film['reviews'].split('|') if film['reviews'] else []
 
-            # Анализируем отзывы
             if reviews:
                 analyses = [analyze_film(review) for review in reviews]
                 avg_analysis = {
@@ -77,7 +74,7 @@ def analyze_movies():
             else:
                 avg_analysis = {'humor': 0, 'plot': 0, 'visuals': 0, 'acting': 0, 'sound': 0}
 
-            # Сохраняем анализ в БД
+
             output_cur.execute('''INSERT OR REPLACE INTO film_analysis 
                                 VALUES (?, ?, ?, ?, ?, ?, ?)''',
                                (film['id'],
@@ -110,7 +107,6 @@ def process_answers():
     try:
         data = request.json
 
-        # Получаем критерии оценки
         user_weights = [
             float(data['criteria']['humor']),
             float(data['criteria']['plot']),
@@ -119,17 +115,14 @@ def process_answers():
             float(data['criteria']['sound'])
         ]
 
-        # Получаем фильтры
         filters = {
             'age': data['filters']['age'],
             'type': data['filters']['type'],
             'genres': data['filters']['genres']
         }
 
-        # Получаем рекомендации
         recommended_films = get_recommendations(user_weights, filters)
 
-        # Сохраняем результаты
         with open('recommendations.json', 'w') as f:
             json.dump(recommended_films, f, ensure_ascii=False, indent=2)
 
@@ -139,13 +132,13 @@ def process_answers():
         return jsonify({"status": "error", "message": str(e)}), 400
 
 
+#Возвращает отсортированный список фильмов по релевантности
 def get_recommendations(user_weights: list, filters: dict) -> list:
-    """Возвращает отсортированный список фильмов по релевантности"""
+
     conn = get_db_connection()
     analysis_conn = get_db_connection(ANALYSIS_DB)
 
     try:
-        # Получаем фильмы с анализом
         cur = conn.cursor()
         analysis_cur = analysis_conn.cursor()
 
@@ -154,7 +147,7 @@ def get_recommendations(user_weights: list, filters: dict) -> list:
                             LEFT JOIN film_analysis a ON f.id = a.id
                    WHERE 1 = 1'''
 
-        # Применяем фильтры
+
         params = []
 
         if filters['age']:
@@ -179,10 +172,10 @@ def get_recommendations(user_weights: list, filters: dict) -> list:
         cur.execute(query, params)
         films = cur.fetchall()
 
-        # Рассчитываем релевантность
+
         recommended_films = []
         for film in films:
-            # Получаем оценки из анализа
+
             film_scores = [
                 film['humor'] or 0,
                 film['plot'] or 0,
@@ -191,10 +184,8 @@ def get_recommendations(user_weights: list, filters: dict) -> list:
                 film['sound'] or 0
             ]
 
-            # Рассчитываем релевантность
             relevance = np.dot(user_weights, film_scores)
 
-            # Нормализуем до 100%
             max_possible = sum(5 * w for w in user_weights)  # 5 - максимальная оценка
             relevance_percent = (relevance / max_possible) * 100 if max_possible > 0 else 0
 
@@ -210,10 +201,9 @@ def get_recommendations(user_weights: list, filters: dict) -> list:
                 'relevance': round(relevance_percent, 1)
             })
 
-        # Сортировка по релевантности
         recommended_films.sort(key=lambda x: x['relevance'], reverse=True)
 
-        return recommended_films[:10]  # Топ-10 рекомендаций
+        return recommended_films[:10]
 
     finally:
         conn.close()
@@ -232,7 +222,6 @@ def results():
 
 
 if __name__ == '__main__':
-    # Инициализация БД анализа при первом запуске
     if not os.path.exists(ANALYSIS_DB):
         analyze_movies()
 
