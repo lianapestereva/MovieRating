@@ -17,7 +17,7 @@ headers = {
     "accept": "application/json"
 }
 
-connection = sqlite3.connect("film.db")
+connection = sqlite3.connect("../../film.db")
 cursor = connection.cursor()
 print('db init...')
 
