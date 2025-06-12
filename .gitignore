@@ -7,3 +7,5 @@ webscraping_tut.md
 __pycache__
 .env
 MovieRating
+absa_model
+aspect_model
