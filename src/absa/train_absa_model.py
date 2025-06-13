@@ -5,9 +5,7 @@ import numpy as np
 import evaluate
 from aspect_data import label_map
 
-
-
-dataset = load_dataset("csv", data_files={"train": "movie_train_absa/train.csv", "test":"data/testing/test_absa.csv"})
+dataset = load_dataset("csv", data_files={"train": "movie_train_absa/train.csv", "test": "data/testing/test_absa.csv"})
 
 num_labels = len(label_map)
 tokenizer = AutoTokenizer.from_pretrained("DeepPavlov/rubert-base-cased")
@@ -17,8 +15,8 @@ model = AutoModelForSequenceClassification.from_pretrained(
     ignore_mismatched_sizes=True
 )
 
-
 print("loaded the model...")
+
 
 def encode_labels(example):
     aspect_sentiment = f"{example['aspect']}_{example['sentiment']}"
@@ -30,6 +28,7 @@ def tokenize(examples):
     texts = [f"{sentence} [SEP] {aspect}" for sentence, aspect in zip(examples["sentence"], examples["aspect"])]
     return tokenizer(texts, padding="max_length", truncation=True, max_length=32, return_special_tokens_mask=True)
 
+
 dataset = dataset.map(tokenize, batched=True)
 dataset = dataset.map(encode_labels)
 dataset = dataset.remove_columns(["sentence", "aspect", "sentiment"])
@@ -40,7 +39,6 @@ for split in dataset.keys():
     dataset = dataset.remove_columns(cols_to_remove)
 train_test_split = dataset["train"].train_test_split(test_size=0.1, seed=42)
 
-
 train_dataset = train_test_split["train"]
 eval_dataset = train_test_split["test"]
 test_dataset = dataset["test"]
@@ -50,13 +48,15 @@ print("split the data...")
 metric_acc = evaluate.load("accuracy")
 metric_f1 = evaluate.load("f1")
 
+
 def compute_metrics(eval_pred):
     logits, labels = eval_pred
     predictions = np.argmax(logits, axis=-1)
     return {
-        "accuracy" : metric_acc.compute(predictions=predictions, references=labels)["accuracy"],
-        "f1_macro" : metric_f1.compute(predictions=predictions, references=labels, average="macro")['f1']
+        "accuracy": metric_acc.compute(predictions=predictions, references=labels)["accuracy"],
+        "f1_macro": metric_f1.compute(predictions=predictions, references=labels, average="macro")['f1']
     }
+
 
 args = TrainingArguments(
     output_dir="absa_model",
@@ -73,7 +73,6 @@ args = TrainingArguments(
     greater_is_better=True,
     report_to="none"
 )
-
 
 trainer = Trainer(
     model=model,

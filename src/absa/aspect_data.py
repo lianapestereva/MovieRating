@@ -1,4 +1,3 @@
-
 label_map = {
     "plot_positive": 0,
     "plot_neutral": 1,
@@ -27,3 +26,7 @@ aspect_descriptions = {
     "sound": ["музыка", "звуковое сопровождение", "саундтрек", "озвучка", "звуковые эффекты"]
 }
 
+label_names = ["O", "B-PLOT", "I-PLOT", "B-ACTING", "I-ACTING", "B-PICTURE", "I-PICTURE", "B-HUMOR", "I-HUMOR",
+               "B-SOUND", "I-SOUND"]
+tag2id = {tag: i for i, tag in enumerate(label_names)}
+id2tag = {i: tag for i, tag in enumerate(label_names)}

@@ -1,43 +1,55 @@
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
-import torch.nn.functional as F
-from transformers import pipeline
-import nltk
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoModelForTokenClassification, \
+    BertForSequenceClassification
 from nltk.tokenize import sent_tokenize
-import numpy as np
-import spacy
-from spacy.matcher import PhraseMatcher
 import torch
-from sentence_transformers import SentenceTransformer, util
-from collections import defaultdict
-from train_absa_model import model, tokenizer
 from aspect_data import *
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+tokenizer = AutoTokenizer.from_pretrained("DeepPavlov/rubert-base-cased")
+absa_model = BertForSequenceClassification.from_pretrained(
+    r"C:\Users\user\PycharmProjects\Movie Rating Project\absa_model\checkpoint-618")
+detect_model = AutoModelForTokenClassification.from_pretrained(
+    r"C:\Users\user\PycharmProjects\Movie Rating Project\aspect_model\checkpoint-150")
+absa_model.eval()
+detect_model.eval()
 
-model_path = "train_model/absa_model"
-tokenizer = AutoTokenizer.from_pretrained(model_path)
-absa_model = AutoModelForSequenceClassification.from_pretrained(model_path)
-model.eval()
 
-
-def predict_aspect_sentiment(text, aspect):
-    inputs = tokenizer(f"{aspect} [SEP] {text}", return_tensors="pt", padding=True, truncation=True, max_length=128)
+# predicts if the aspect described in a sentence positively, neutrally or negatively
+def predict_aspect_sentiment(sentence, aspect):
+    inputs = tokenizer(f"{aspect} [SEP] {sentence}", return_tensors="pt", padding=True, truncation=True, max_length=32)
     with torch.no_grad():
-        outputs = model(**inputs)
-        logits = outputs.logits
+        absa_logits = absa_model(**inputs).logits
 
-    predicted_class_id = logits.argmax().item()
+    predicted_class_id = absa_logits.argmax().item()
     full_label = id_to_label[predicted_class_id]
-    if predicted_class_id %3==0: return 1
-    elif predicted_class_id%3==1: return 0
+
+    print(sentence, aspect, full_label)
+    if predicted_class_id % 3 == 0:
+        return 1
+    elif predicted_class_id % 3 == 1:
+        return 0
     return -1
 
 
+# analyses what aspects are present in the sentence
 def predict_aspects(sentence):
-    pass
+    inputs = tokenizer([sentence.split()], return_tensors='pt', padding=True, truncation=True, max_length=32,
+                       is_split_into_words=True)
+    with torch.no_grad():
+        detect_logits = detect_model(**inputs).logits
+    predictions = torch.argmax(detect_logits, dim=2)
+    predictions = predictions[0].tolist()
 
+    predicted_aspects = [id2tag[id_] for id_ in predictions]
+    predicted_aspects_unique = set()
+    for aspect in predicted_aspects:
+        if aspect != 'O':
+            predicted_aspects_unique.add(aspect.lower()[2:])
+
+    return predicted_aspects_unique
+
+
+# analyses each sentence of a review and returns list of tuples aspect-overall sentiment
 def analyze_review(review):
-
     aspect_output = {
         "plot": 0,
         "acting": 0,
@@ -51,11 +63,9 @@ def analyze_review(review):
 
         for aspect in predicted_aspects:
             val = predict_aspect_sentiment(sentence, aspect)
-            aspect_output[aspect]+=val
+            aspect_output[aspect] += val
 
     return list(aspect_output.items())
-
-
 
 
 if __name__ == "__main__":

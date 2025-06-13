@@ -1,10 +1,8 @@
-
 import requests
 import json
 import sqlite3
 import os
 from dotenv import load_dotenv
-
 
 load_dotenv()
 
@@ -22,22 +20,22 @@ cursor = connection.cursor()
 print('db init...')
 
 
-def save_json(name, data) :
+def save_json(name, data):
     with open(name, 'w') as json_file:
         json.dump(data, json_file, indent=4)
 
 
-#gets reviews of a movie with known id through api and saves to json file
+# gets reviews of a movie with known id through api and saves to json file
 def get_reviews(movie_id: int):
     try:
         review_url = f"https://api.kinopoisk.dev/v1.4/review?page=1&limit=10&selectFields=id&selectFields=review&selectFields=type&movieId={movie_id}"
-        response = requests.get(review_url, headers = headers)
+        response = requests.get(review_url, headers=headers)
         return response.json()
     except requests.exceptions.RequestException as e:
         print(f'could not access review url: {e}')
 
 
-#gets movie info from json and puts it into database
+# gets movie info from json and puts it into database
 def get_movie_info(movie: json):
     id_ = movie['id']
 
@@ -47,7 +45,7 @@ def get_movie_info(movie: json):
         return
 
     rating = movie['rating']['kp']
-    name = movie['name']+ ' (' + str(movie['year']) + ')'
+    name = movie['name'] + ' (' + str(movie['year']) + ')'
     is_series = movie['isSeries']
     if is_series:
         duration = movie['totalSeriesLength']
@@ -60,7 +58,6 @@ def get_movie_info(movie: json):
     print(name)
     reviews_data = get_reviews(id_)
     reviews = json.dumps(reviews_data.get('docs', []), ensure_ascii=False)
-
 
     cursor.execute('''
                 INSERT INTO films 
@@ -123,8 +120,7 @@ def save_movies_to_db(url: str):
             print("sqlite connection closed")
 
 
-
-if __name__=="__main__":
+if __name__ == "__main__":
     print("Using this file, you can add a list of movies via url to the pre-existing database film.db")
 
     print("To start press enter: ")
@@ -133,5 +129,3 @@ if __name__=="__main__":
     save_movies_to_db(url)
 
     print("all done!")
-
-
