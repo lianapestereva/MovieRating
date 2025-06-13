@@ -32,6 +32,9 @@ def process_movies(input_db: str):
 
         if cnt % 5 == 0:
             conn.commit()
+
+        if cnt>15:
+            conn.commit()
             break
 
         cur.execute('SELECT REVIEWS FROM films WHERE ID = ?', (movie_id,))
