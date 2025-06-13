@@ -2,7 +2,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification, Auto
     BertForSequenceClassification
 from nltk.tokenize import sent_tokenize
 import torch
-from aspect_data import *
+from src.absa.aspect_data import *
 
 tokenizer = AutoTokenizer.from_pretrained("DeepPavlov/rubert-base-cased")
 absa_model = BertForSequenceClassification.from_pretrained(
@@ -22,7 +22,7 @@ def predict_aspect_sentiment(sentence, aspect):
     predicted_class_id = absa_logits.argmax().item()
     full_label = id_to_label[predicted_class_id]
 
-    print(sentence, aspect, full_label)
+    #print(aspect, full_label)
     if predicted_class_id % 3 == 0:
         return 1
     elif predicted_class_id % 3 == 1:
@@ -36,6 +36,7 @@ def predict_aspects(sentence):
                        is_split_into_words=True)
     with torch.no_grad():
         detect_logits = detect_model(**inputs).logits
+
     predictions = torch.argmax(detect_logits, dim=2)
     predictions = predictions[0].tolist()
 
@@ -46,6 +47,12 @@ def predict_aspects(sentence):
             predicted_aspects_unique.add(aspect.lower()[2:])
 
     return predicted_aspects_unique
+
+
+def sign(n):
+    if n>0: return 1
+    if n<0: return -1
+    return 0
 
 
 # analyses each sentence of a review and returns list of tuples aspect-overall sentiment
@@ -65,7 +72,9 @@ def analyze_review(review):
             val = predict_aspect_sentiment(sentence, aspect)
             aspect_output[aspect] += val
 
-    return list(aspect_output.items())
+    #print(list(aspect_output.items()))
+    #print([sign(x[1]) for x in list(aspect_output.items())])
+    return [sign(x[1]) for x in list(aspect_output.items())]
 
 
 if __name__ == "__main__":
