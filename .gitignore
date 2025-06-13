@@ -9,3 +9,4 @@ __pycache__
 MovieRating
 absa_model
 aspect_model
+.gitignore

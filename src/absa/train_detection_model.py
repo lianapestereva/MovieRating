@@ -38,7 +38,7 @@ def tokenize_and_align_labels(examples):
     return tokenized_inputs
 
 
-dataset = load_dataset("json", data_files={"train": "movie_train_absa/train_detection.json",
+dataset = load_dataset("json", data_files={"train": "data/train/train_detection.json",
                                            "test": "data/testing/test_detection.json"})
 dataset = dataset.map(tokenize_and_align_labels, batched=True)
 

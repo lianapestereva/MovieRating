@@ -5,7 +5,7 @@ import numpy as np
 import evaluate
 from aspect_data import label_map
 
-dataset = load_dataset("csv", data_files={"train": "movie_train_absa/train.csv", "test": "data/testing/test_absa.csv"})
+dataset = load_dataset("csv", data_files={"train": "data/train/train.csv", "test": "data/testing/test_absa.csv"})
 
 num_labels = len(label_map)
 tokenizer = AutoTokenizer.from_pretrained("DeepPavlov/rubert-base-cased")
