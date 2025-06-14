@@ -15,7 +15,7 @@ headers = {
     "accept": "application/json"
 }
 
-connection = sqlite3.connect("../../film.db")
+connection = sqlite3.connect("film.db")
 cursor = connection.cursor()
 print('db init...')
 
@@ -44,6 +44,7 @@ def get_movie_info(movie: json):
         print(f"id {id_} already exists")
         return
 
+    print(f"inserted id {id_}")
     rating = movie['rating']['kp']
     name = movie['name'] + ' (' + str(movie['year']) + ')'
     is_series = movie['isSeries']
@@ -124,7 +125,7 @@ if __name__ == "__main__":
     print("Using this file, you can add a list of movies via url to the pre-existing database film.db")
 
     print("To start press enter: ")
-    url = "https://api.kinopoisk.dev/v1.4/movie?page=1&limit=50&selectFields=id&selectFields=name&selectFields=year&selectFields=rating&selectFields=movieLength&selectFields=totalSeriesLength&selectFields=seriesLength&selectFields=ageRating&selectFields=genres&selectFields=isSeries&lists=top500"
+    url = "https://api.kinopoisk.dev/v1.4/movie?page=2&limit=50&selectFields=id&selectFields=name&selectFields=year&selectFields=rating&selectFields=movieLength&selectFields=totalSeriesLength&selectFields=seriesLength&selectFields=ageRating&selectFields=genres&selectFields=isSeries&lists=series-top250"
 
     save_movies_to_db(url)
 
