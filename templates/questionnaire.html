@@ -107,8 +107,46 @@
             
             <button type="submit" class="btn">Получить рекомендации</button>
         </form>
-    </div>
+        </form>
+
     
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+        <script>
+        document.getElementById('questionnaire-form').addEventListener('submit', async (e) => {
+          e.preventDefault();
+  
+          const formData = new FormData(e.target);
+          const data = {
+            criteria: {
+              plot: formData.get('plot'),
+              acting: formData.get('acting'),
+              humor: formData.get('humor'),
+              picture: formData.get('picture'),
+              sound: formData.get('sound')
+            },
+            filters: {
+              age: Array.from(formData.getAll('age')),
+              type: Array.from(formData.getAll('type')),
+              genres: Array.from(formData.getAll('genres'))
+            }
+          };
+
+          try {
+            const response = await fetch('/process_answers', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(data)
+            });
+    
+            if (response.ok) {
+              window.location.href = '/results';
+            }
+          } catch (error) {
+            console.error('Ошибка:', error);
+          }
+        });
+        </script>
+    </div>
 </body>
 </html>
