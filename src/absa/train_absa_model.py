@@ -1,25 +1,13 @@
 from datasets import load_dataset
-from datasets.packaged_modules.webdataset.webdataset import torch_loads
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer, AutoConfig
 from transformers import EarlyStoppingCallback
 import numpy as np
 import evaluate
 from aspect_data import *
 from aspect_data import label_map, translated
-import torch
-from sklearn.utils.class_weight import compute_class_weight
 
 dataset = load_dataset("csv", data_files={"train": "data/train/train.csv", "test": "data/testing/test_absa.csv"})
 
-"""
-aspects = dataset["train"]["aspect"]
-class_weights = compute_class_weight(
-    class_weight = "balanced",
-    classes = np.unique(aspects),
-    y=aspects
-)
-
-"""
 num_labels = len(label_map)
 
 config = AutoConfig.from_pretrained(
@@ -35,8 +23,6 @@ model = AutoModelForSequenceClassification.from_pretrained(
     num_labels=num_labels,
     problem_type="single_label_classification"
 )
-# class_weights = torch.tensor(class_weights, dtype=torch.float32)
-# model.loss_fct=torch.nn.CrossEntropyLoss(weight=class_weights)
 
 print("loaded the model...")
 
@@ -57,16 +43,6 @@ dataset = dataset.map(tokenize, batched=True)
 dataset = dataset.map(encode_labels)
 dataset.set_format(type="torch", columns=["input_ids", "attention_mask", "label"])
 
-"""
-
-dataset = dataset.remove_columns(["sentence", "aspect", "sentiment"])
-
-columns_to_keep = ["input_ids", "attention_mask", "label"]
-for split in dataset.keys():
-    cols_to_remove = [col for col in dataset[split].column_names if col not in columns_to_keep]
-    dataset = dataset.remove_columns(cols_to_remove)
-"""
-
 train_test_split = dataset["train"].train_test_split(test_size=0.1, seed=42)
 
 train_dataset = train_test_split["train"]
@@ -79,9 +55,6 @@ print("Sample train inputs:")
 print(tokenizer.decode(train_dataset[0]["input_ids"]))
 label_id = train_dataset[0]["label"].item()
 print("Label:", label_id, id_to_label[label_id])
-
-# class_weights = torch.tensor(class_weights, dtype=torch.float32)
-
 
 metric_acc = evaluate.load("accuracy")
 metric_f1 = evaluate.load("f1")

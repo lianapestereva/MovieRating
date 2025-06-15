@@ -125,7 +125,7 @@ if __name__ == "__main__":
     print("Using this file, you can add a list of movies via url to the pre-existing database film.db")
 
     print("To start press enter: ")
-    url = "https://api.kinopoisk.dev/v1.4/movie?page=2&limit=50&selectFields=id&selectFields=name&selectFields=year&selectFields=rating&selectFields=movieLength&selectFields=totalSeriesLength&selectFields=seriesLength&selectFields=ageRating&selectFields=genres&selectFields=isSeries&lists=series-top250"
+    url = "https://api.kinopoisk.dev/v1.4/movie?page=1&limit=50&selectFields=id&selectFields=name&selectFields=year&selectFields=rating&selectFields=movieLength&selectFields=totalSeriesLength&selectFields=seriesLength&selectFields=ageRating&selectFields=genres&selectFields=isSeries&rating.kp=0-6"
 
     save_movies_to_db(url)
 

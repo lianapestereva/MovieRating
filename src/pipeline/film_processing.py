@@ -1,7 +1,6 @@
 import sqlite3
 import json
 from srsly import json_dumps
-
 from src.absa.absa import analyze_review
 
 
