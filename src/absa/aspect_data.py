@@ -1,3 +1,5 @@
+from gettext import translation
+
 label_map = {
     "plot_positive": 0,
     "plot_neutral": 1,
@@ -16,15 +18,18 @@ label_map = {
     "humor_negative": 14
 }
 
-id_to_label = {v: k for k, v in label_map.items()}
 
-aspect_descriptions = {
-    "plot": ["сюжет", "история", "повествование", "сценарий", "нарратив"],
-    "acting": ["актёр", "актриса", "игра", "исполнение", "актёрский состав"],
-    "humor": ["юмор", "шутка", "смешно", "комедийный", "сатира"],
-    "picture": ["оператор", "съёмка", "визуал", "картинка", "спецэффекты"],
-    "sound": ["музыка", "звуковое сопровождение", "саундтрек", "озвучка", "звуковые эффекты"]
+
+translated = {
+    "plot":"сюжет",
+    "acting":"актерская игра",
+    "picture":"визуал",
+    "sound":"звук",
+    "humor":"юмор"
 }
+
+
+id_to_label = {v: k for k, v in label_map.items()}
 
 label_names = ["O", "B-PLOT", "I-PLOT", "B-ACTING", "I-ACTING", "B-PICTURE", "I-PICTURE", "B-HUMOR", "I-HUMOR",
                "B-SOUND", "I-SOUND"]

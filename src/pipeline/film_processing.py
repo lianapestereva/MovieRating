@@ -1,6 +1,5 @@
 import sqlite3
 import json
-import numpy as np
 from srsly import json_dumps
 
 from src.absa.absa import analyze_review
@@ -22,6 +21,7 @@ def process_movies(input_db: str):
     for movie_id in movie_ids:
 
         cur.execute("SELECT * FROM movie_analysis WHERE ID = ? ", (movie_id,))
+
         if cur.fetchone():
             print("already exists")
             continue
@@ -30,12 +30,8 @@ def process_movies(input_db: str):
         cnt += 1
         print(f"processing movie #{cnt} with id {movie_id}")
 
-        if cnt % 5 == 0:
+        if cnt % 10 == 0:
             conn.commit()
-
-        if cnt>15:
-            conn.commit()
-            break
 
         cur.execute('SELECT REVIEWS FROM films WHERE ID = ?', (movie_id,))
 
@@ -47,11 +43,14 @@ def process_movies(input_db: str):
             analysis = analyze_review(review['review'])
             for i in range(len(analysis)): movie_analysis[i] += analysis[i]
 
-        print(movie_analysis)
+        print("result: ", movie_analysis)
 
-        cur.execute('INSERT INTO movie_analysis VALUES (?, json(?))',
-                    (movie_id, json_dumps(movie_analysis)))
-
+        try:
+            cur.execute('INSERT INTO movie_analysis VALUES (?, json(?))',
+                        (movie_id, json_dumps(movie_analysis)))
+        except sqlite3.IntegrityError:
+            cur.execute("UPDATE movie_analysis SET ANALYSIS = json(?) WHERE ID = ?",
+                        (json_dumps(movie_analysis), movie_id))
 
     conn.commit()
     conn.close()
