@@ -2,20 +2,36 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Результаты</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Рекомендуем посмотреть</h1>
-        <div class="result-card">
-            <h2>"Бойцовский клуб"</h2>
-            <p>Рейтинг: 8.7</p>
-            <p>Год: 1999</p>
-            <p>Жанр: триллер, драма</p>
-        </div>
-        <a href="/" class="btn">Вернуться на главную</a>
+        <h1>Рекомендуемые фильмы</h1>
+        {% if films %}
+            <div class="film-grid">
+                {% for film in films %}
+                <div class="film-card">
+                    <h2>{{ film.title }}</h2>
+                    <div class="film-meta">
+                        <span>Рейтинг: {{ film.rating }}</span>
+                        <span>Год: {{ film.year }}</span>
+                        <span>{{ film.type }}, {{ film.duration }} мин</span>
+                        <span>Возраст: {{ film.age_rating }}</span>
+                    </div>
+                    <div class="genres">
+                        {% for genre in film.genres %}
+                        <span class="genre">{{ genre }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="relevance">Совпадение: {{ film.relevance }}%</div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Нет результатов по вашим критериям</p>
+        {% endif %}
+        <a href="/" class="button">На главную</a>
     </div>
 </body>
 </html>
