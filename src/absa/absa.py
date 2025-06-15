@@ -22,6 +22,7 @@ def predict_aspect_sentiment(sentence, aspect):
     predicted_class_id = absa_logits.argmax().item()
     full_label = id_to_label[predicted_class_id]
 
+    #print(sentence, aspect, full_label)
     if predicted_class_id % 3 == 0:
         return 1
     elif predicted_class_id % 3 == 1:
