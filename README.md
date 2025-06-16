@@ -43,7 +43,16 @@ git clone https://github.com/lianapestereva/MovieRating
 ``` bash
 pip install -r requirements.txt
 ```
-3. Тренировка модели:
+3.	Запустить приложение:
+``` bash
+python app.py
+```
+4.	Открыть в браузере:
+``` bash
+http://localhost:5000
+```
+Если вы хотите пользоваться моделью для обработки ваших данных, вы можете натренировать модели. 
+5. Тренировка модели:
    
    Из терминала запустить файлы: ```train_absa_model.py```, ```train_detection_model.py ```
 
@@ -54,14 +63,6 @@ pip install -r requirements.txt
     r"X")
 detect_model = AutoModelForTokenClassification.from_pretrained(
     r"Y")
-```
-3.	Запустить приложение:
-``` bash
-python app.py
-```
-4.	Открыть в браузере:
-``` bash
-http://localhost:5000
 ```
 
 ### Структура проекта
