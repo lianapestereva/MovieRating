@@ -2,36 +2,39 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Результаты</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результаты рекомендаций</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>Рекомендуемые фильмы</h1>
+        <h1>Рекомендации для вас</h1>
+        
         {% if films %}
-            <div class="film-grid">
+            <p class="results-count">Найдено фильмов: {{ films|length }}</p>
+            
+            <div class="results-grid">
                 {% for film in films %}
-                <div class="film-card">
-                    <h2>{{ film.title }}</h2>
-                    <div class="film-meta">
-                        <span>Рейтинг: {{ film.rating }}</span>
-                        <span>Год: {{ film.year }}</span>
-                        <span>{{ film.type }}, {{ film.duration }} мин</span>
-                        <span>Возраст: {{ film.age_rating }}</span>
+                <div class="result-card">
+                    <h2>{{ film.NAME }}</h2>
+                    <div class="film-details">
+                        <p><strong>Жанр:</strong> 
+                        {{ film.GENRES.replace('\\', '').replace('"', '').replace('[', '').replace(']', '') }}
+                        </p>
+                        <p><strong>Рейтинг Кинопоиска:</strong> {{ "%.1f"|format(film.RATING) }}</p>
+                        <p><strong>Возрастное ограничение:</strong> {{ film.AGE_RATING }}+</p>
+                        <p><strong>Тип:</strong> {% if film.IS_SERIES %}Сериал{% else %}Фильм{% endif %}</p>
+                        <p><strong>Продолжительность:</strong> {{ film.DURATION }} мин.</p>
                     </div>
-                    <div class="genres">
-                        {% for genre in film.genres %}
-                        <span class="genre">{{ genre }}</span>
-                        {% endfor %}
-                    </div>
-                    <div class="relevance">Совпадение: {{ film.relevance }}%</div>
                 </div>
                 {% endfor %}
             </div>
         {% else %}
-            <p>Нет результатов по вашим критериям</p>
+            <div class="no-results">
+                <p>К сожалению, по вашим критериям не найдено подходящих фильмов.</p>
+                <a href="{{ url_for('main.questionnaire') }}" class="btn">Попробовать снова</a>
+            </div>
         {% endif %}
-        <a href="/" class="button">На главную</a>
     </div>
 </body>
 </html>
