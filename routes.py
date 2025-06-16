@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for
-from app.recommendation_logic import save_user_answers, get_recommendations
 import json
+from flask import Blueprint, render_template, request
+from app_flask import db
+from app_flask.models import Film, MovieAnalysis
+from app_flask.recommendation_logic import get_recommendations, save_user_answers
 
 main_bp = Blueprint('main', __name__)
 
