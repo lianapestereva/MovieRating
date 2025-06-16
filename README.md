@@ -32,7 +32,7 @@ __Зависимости:__
 __Требования к системе:__
 *	ОС: Windows 10/11, macOS 12+
 *	Память: 4 ГБ ОЗУ (8 ГБ)
-*	Диск: 2 ГБ свободного места
+*	Диск: 8 ГБ свободного места
   
 __Инструкция по установке__
 1.	Клонировать репозиторий:
@@ -47,7 +47,14 @@ pip install -r requirements.txt
    
    Из терминала запустить файлы: ```train_absa_model.py```, ```train_detection_model.py ```
 
-   При тренировке модели поменять checkpoint на один из тех, что высветится в папке ```absa_model``` 
+   После тренировки модели поменять в переменной absa_model путь на один из checkpoint'ов, что высветится в папке ```absa_model```, поменять в переменной detect_model путь на один из checkpoint'ов, что высветится в папке ```detect_model``` 
+
+```
+   absa_model = AutoModelForSequenceClassification.from_pretrained(
+    r"X")
+detect_model = AutoModelForTokenClassification.from_pretrained(
+    r"Y")
+```
 3.	Запустить приложение:
 ``` bash
 python app.py
