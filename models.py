@@ -1,4 +1,4 @@
-from app import db
+from app_flask import db
 
 class Film(db.Model):
     __tablename__ = 'films'
