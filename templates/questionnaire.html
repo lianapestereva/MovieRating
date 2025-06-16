@@ -129,7 +129,7 @@
               genres: Array.from(formData.getAll('genres'))
             }
           };
-
+            
           try {
             const response = await fetch('/process_answers', {
               method: 'POST',
