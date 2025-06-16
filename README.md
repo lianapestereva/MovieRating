@@ -47,7 +47,7 @@ pip install -r requirements.txt
    
    Из терминала запустить файлы: ```train_absa_model.py```, ```train_detection_model.py ```
 
-   После тренировки модели поменять в переменной absa_model путь на один из checkpoint'ов, что высветится в папке ```absa_model```, поменять в переменной detect_model путь на один из checkpoint'ов, что высветится в папке ```detect_model``` 
+   После тренировки модели поменять в переменной absa_model checkpoint на один из checkpoint'ов, что высветится в папке ```absa_model```, поменять в переменной detect_model checkpoint на один из checkpoint'ов, что высветится в папке ```detect_model``` 
 
 ```
    absa_model = AutoModelForSequenceClassification.from_pretrained(
