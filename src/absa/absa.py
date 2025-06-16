@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ABSOLUTE_PATH_TO_ROOT = os.path.abspath(os.path.join(BASE_DIR, "..", ".."))
 ABS_MODEL_DIR = os.path.join(ABSOLUTE_PATH_TO_ROOT, "absa_model")
 ASPECT_MODEL_DIR = os.path.join(ABSOLUTE_PATH_TO_ROOT, "aspect_model")
-print(os.path.join(ABS_MODEL_DIR, "checkpoint-312"))
+
 absa_model = AutoModelForSequenceClassification.from_pretrained(
     os.path.join(ABS_MODEL_DIR, "checkpoint-312")
 )
@@ -33,7 +33,7 @@ def predict_aspect_sentiment(sentence, aspect):
     predicted_class_id = absa_logits.argmax().item()
     full_label = id_to_label[predicted_class_id]
 
-    #print(sentence, aspect, full_label)
+    # print(sentence, aspect, full_label)
     if predicted_class_id % 3 == 0:
         return 1
     elif predicted_class_id % 3 == 1:
@@ -84,4 +84,3 @@ def analyze_review(review):
             aspect_output[translated[aspect]] += val
 
     return [sign(x[1]) for x in list(aspect_output.items())]
-
