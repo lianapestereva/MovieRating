@@ -2,12 +2,23 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification, Auto
 from nltk.tokenize import sent_tokenize
 import torch
 from src.absa.aspect_data import *
+import os
 
 tokenizer = AutoTokenizer.from_pretrained("DeepPavlov/rubert-base-cased")
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+ABSOLUTE_PATH_TO_ROOT = os.path.abspath(os.path.join(BASE_DIR, "..", ".."))
+ABS_MODEL_DIR = os.path.join(ABSOLUTE_PATH_TO_ROOT, "absa_model")
+ASPECT_MODEL_DIR = os.path.join(ABSOLUTE_PATH_TO_ROOT, "aspect_model")
+print(os.path.join(ABS_MODEL_DIR, "checkpoint-312"))
 absa_model = AutoModelForSequenceClassification.from_pretrained(
-    r"C:\Users\user\PycharmProjects\Movie Rating Project\absa_model\checkpoint-312")
+    os.path.join(ABS_MODEL_DIR, "checkpoint-312")
+)
+
 detect_model = AutoModelForTokenClassification.from_pretrained(
-    r"C:\Users\user\PycharmProjects\Movie Rating Project\aspect_model\checkpoint-150")
+    os.path.join(ASPECT_MODEL_DIR, "checkpoint-150")
+)
 absa_model.eval()
 detect_model.eval()
 
@@ -73,6 +84,4 @@ def analyze_review(review):
             aspect_output[translated[aspect]] += val
 
     return [sign(x[1]) for x in list(aspect_output.items())]
-
-
 
