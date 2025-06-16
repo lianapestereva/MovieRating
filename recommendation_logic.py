@@ -1,6 +1,7 @@
 import json
 import re
-from app.models import Film, MovieAnalysis, db
+from app_flask import db
+from app_flask.models import Film, MovieAnalysis
 
 def get_recommendations():
     print("Проверка данных в БД:")
