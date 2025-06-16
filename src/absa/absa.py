@@ -5,9 +5,9 @@ from src.absa.aspect_data import *
 
 tokenizer = AutoTokenizer.from_pretrained("DeepPavlov/rubert-base-cased")
 absa_model = AutoModelForSequenceClassification.from_pretrained(
-    r"C:\Users\user\PycharmProjects\Movie Rating Project\absa_model\checkpoint-312")
+    r"X")
 detect_model = AutoModelForTokenClassification.from_pretrained(
-    r"C:\Users\user\PycharmProjects\Movie Rating Project\aspect_model\checkpoint-150")
+    r"Y")
 absa_model.eval()
 detect_model.eval()
 
@@ -75,9 +75,3 @@ def analyze_review(review):
     return [sign(x[1]) for x in list(aspect_output.items())]
 
 
-if __name__ == "__main__":
-    with open(r"C:\Users\user\PycharmProjects\Movie Rating Project\data\testing\test_absa.csv", encoding="utf-8") as f:
-        s = f.readline()
-        for i in range(20):
-            s = f.readline().split(",")[0]
-            print(analyze_review(s))
