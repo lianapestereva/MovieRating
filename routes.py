@@ -1,56 +1,73 @@
-from flask import render_template, request, jsonify
-from app.models import get_recommendations, save_user_answers
-from app import app
+from flask import Blueprint, render_template, request, redirect, url_for
+from app.recommendation_logic import save_user_answers, get_recommendations
 import json
-import os
 
-@app.route('/')
-def home():
+main_bp = Blueprint('main', __name__)
+
+@main_bp.route('/')
+def index():
     return render_template('index.html')
 
-@app.route('/questionnaire')
+@main_bp.route('/questionnaire')
 def questionnaire():
     return render_template('questionnaire.html')
 
-@app.route('/process_answers', methods=['POST'])
+@main_bp.route('/process_answers', methods=['POST'])
 def process_answers():
-    try:
-        # Добавьте логгирование для отладки
-        print("Получены данные:", request.json)
-        
-        if not request.json:
-            return jsonify({"status": "error", "message": "No data received"}), 400
+    data = request.get_json()
+    
+    genre_translation = {
+        'anime': 'аниме',
+         'biography': 'биография',
+ 	     'action': 'боевик',
+ 	     'war': 'военный',
+ 	     'detective': 'детектив',
+ 	     'drama': 'драма',
+ 	     'history': 'история', 
+ 	     'comedy': 'комедия',
+ 	     'crime': 'криминал',
+ 	     'romance': 'мелодрама', 
+	     'cartoon': 'мультфильм', 
+	     'musical': 'мюзикл', 
+	     'adventure': 'приключения', 
+	     'family': 'семейный',
+	     'thriller': 'триллер', 
+	     'horror': 'ужасы',
+	     'sci-fi': 'фантастика', 
+	     'film noir': 'фильм-нуар', 
+ 	     'fantasy': 'фэнтези'
+    }
+    
+    russian_genres = [genre_translation[genre.lower()] 
+                     for genre in data['filters']['genres']]
+    
+    simplified = {
+        'criteria': [
+            int(data['criteria']['plot']),
+            int(data['criteria']['acting']),
+            int(data['criteria']['humor']),
+            int(data['criteria']['picture']),
+            int(data['criteria']['sound'])
+        ],
+        'filters': {
+            'age': [int(age.replace('+', '')) for age in data['filters']['age']],
+            'type': 0 if 'film' in data['filters']['type'] else 1,
+            'genres': russian_genres
+        }
+    }
+    
+    with open('data/user_answers.json', 'w', encoding='utf-8') as f:
+        json.dump(simplified, f, ensure_ascii=False)
+    
+    return {'status': 'success'}
 
-        data = request.json
-        result = [
-            [
-                int(data.get('criteria', {}).get('plot', 0)),
-                int(data.get('criteria', {}).get('acting', 0)),
-                int(data.get('criteria', {}).get('humor', 0)),
-                int(data.get('criteria', {}).get('picture', 0)),
-                int(data.get('criteria', {}).get('sound', 0))
-            ],
-            data.get('filters', {}).get('age', []),
-            data.get('filters', {}).get('type', []),
-            data.get('filters', {}).get('genres', [])
-        ]
-
-        # Проверка перед сохранением
-        print("Сформированный результат:", result)
-        
-        with open('data/user_answers.json', 'w') as f:
-            json.dump(result, f, ensure_ascii=False, indent=2)
-
-        return jsonify({"status": "success"})
-    except Exception as e:
-        print("Ошибка обработки:", str(e))
-        return jsonify({"status": "error", "message": str(e)}), 500
-
-@app.route('/results')
+@main_bp.route('/results')
 def results():
     try:
-        with open('C:/Users/pingu/Desktop/hse/MovieRating/data/recommendations.json') as f:
-            films = json.load(f)
+        films = get_recommendations()
+        print(f"Передано фильмов в шаблон: {len(films)}")
+                
         return render_template('results.html', films=films)
     except Exception as e:
-        return render_template('error.html', message=str(e))
+        print(f"Ошибка в results: {str(e)}")
+        return render_template('results.html', films=[])
